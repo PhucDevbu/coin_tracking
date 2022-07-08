@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coin_tracking/models/API.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +9,9 @@ class MarketProvider with ChangeNotifier {
   bool isLoading = true;
   List<Crypto> markets = [];
 
+  MarketProvider(){
+    fetchData();
+  }
   void fetchData() async {
     List<dynamic> _markets = await API.getMarkets();
 
@@ -19,5 +24,10 @@ class MarketProvider with ChangeNotifier {
     markets = temp;
     isLoading = false;
     notifyListeners();
+
+    Timer(const Duration(seconds: 10),(){
+      fetchData();
+      print("Data update");
+    });
   }
 }

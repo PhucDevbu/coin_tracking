@@ -1,5 +1,7 @@
 import 'package:coin_tracking/pages/home_page.dart';
+import 'package:coin_tracking/providers/market_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,9 +14,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<MarketProvider>(
+          create: (context)=>MarketProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      )
     );
   }
 }

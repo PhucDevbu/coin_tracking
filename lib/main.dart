@@ -1,15 +1,24 @@
+import 'package:coin_tracking/constants/themes.dart';
+import 'package:coin_tracking/models/local_storage.dart';
 import 'package:coin_tracking/pages/home_page.dart';
 import 'package:coin_tracking/providers/market_provider.dart';
+import 'package:coin_tracking/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+
+  String currentTheme = await LocalStorage.getTheme() ?? "light";
+
+  runApp(MyApp(theme: currentTheme));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+
+  final String theme;
+
+  const MyApp({Key? key,required this.theme}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -19,11 +28,23 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<MarketProvider>(
           create: (context)=>MarketProvider(),
         ),
+
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context)=>ThemeProvider(theme),
+        )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HomePage(),
-      )
+      child: Consumer<ThemeProvider>(
+        builder: (context,themeProvider,child){
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            themeMode: themeProvider.themeMode,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            home: HomePage(),
+          );
+        },
+      ),
+
     );
   }
 }

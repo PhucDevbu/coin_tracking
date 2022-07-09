@@ -12,7 +12,7 @@ class MarketProvider with ChangeNotifier {
   MarketProvider(){
     fetchData();
   }
-  void fetchData() async {
+  Future<void> fetchData() async {
     List<dynamic> _markets = await API.getMarkets();
 
     List<Crypto> temp = [];
@@ -25,8 +25,10 @@ class MarketProvider with ChangeNotifier {
     isLoading = false;
     notifyListeners();
 
-    Timer(const Duration(seconds: 10),(){
-      fetchData();
-    });
+  }
+
+  Crypto fetchCryptoById(String id){
+    Crypto crypto = markets.where((element) => element.id==id).toList()[0];
+    return crypto;
   }
 }
